@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script type="module" defer>
+
+        import { getDatabase, ref, set, push, onValue} from
+                'https://www.gstatic.com/firebasejs/9.14.0/firebase-database.js'
+        import { initializeApp } from
+                'https://www.gstatic.com/firebasejs/9.14.0/firebase-app.js'
+        const firebaseConfig = {
+            apiKey: "AIzaSyBSb-HI_xQfdj0T9gpsJzOG_uRrdMR2Zx8",
+            authDomain: "fir-89751.firebaseapp.com",
+            databaseURL: "https://fir-89751-default-rtdb.europe-west1.firebasedatabase.app",
+            projectId: "fir-89751",
+            storageBucket: "fir-89751.appspot.com",
+            messagingSenderId: "582215028797",
+            appId: "1:582215028797:web:e48347efe40cb916d79a54"
+        };
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        console.log("app", app)
+
+        const database = getDatabase(app);
+        console.log("database", database)
+
+        const button = document.querySelector('#button');
+        const nom = document.querySelector('#nom');
+        const age = document.querySelector('#age');
+        //let id = 3;
+
+        const userRef = ref(database, 'Utilisateur');
+        const list = document.querySelector('#list');
+        button.addEventListener('click', () => {
+            const newUserRef = push(userRef);
+            set(newUserRef,
+                {
+                    nom: nom.value,
+                    age: age.value,
+                }
+            )
+            console.log("J\'aime les maths")
+            //id+=1;
+
+        })
+
+        onValue(userRef,
+            (snapshot) => {
+                const data = snapshot.val();
+                console.log(data);
+                list.innerHTML = "";
+                for(const user of Object.values(data)) {
+                    list.innerHTML += "<li> " + user.nom + " " + user.age + "</li>"
+                }
+            }
+        )
+
+
+
+
+    </script>
+</head>
+<body>
+    <input type="text" id="nom">
+    <input type="text" id="age">
+    <button id="button">Click</button>
+    <div id="list"></div>
+</body>
+</html>
